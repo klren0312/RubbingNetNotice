@@ -1,0 +1,17 @@
+{
+  "name": "routermonit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gribnoysup/wunderbar": "^2.2.1",
+    "asciichart": "^1.5.7",
+    "axios": "^0.18.0",
+    "node-notifier": "^5.2.1"
+  }
+}
