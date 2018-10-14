@@ -22,6 +22,7 @@ function getData() {
       downSpeed = []
       upSpeed = []
       result.qosList.map(v => {
+        // 将数据遍历到数组中, 图表需要的数据格式 {value: 你的数据, label: 数据的标题, color: 数据的颜色} 后两项不是必须的
         downSpeed.push({
           value: v.qosListDownSpeed,
           label: v.qosListHostname
@@ -44,6 +45,7 @@ function getData() {
     })
 }
 
+// 绘图方法
 const printData = () => {
   const { chart, legend, scale, __raw } = wunderbar(downSpeed, {
     min: 0,
@@ -51,10 +53,12 @@ const printData = () => {
     format: (n) => `${n}KB/s`
   });
 
+  // 清空命令行
   process.stdout.write('\n');
   process.stdout.write('\033[0f');
   process.stdout.write('\033[2J');
 
+  // 绘制图表
   console.log()
   console.log('==========================================');
   console.log(`当前时间:${new Date().toLocaleTimeString()}`)
@@ -66,10 +70,13 @@ const printData = () => {
   console.log();
 };
 
+// 定时刷新
 setInterval(async () => {
   await getData()
+  // 判断是否有新设备加入
   if (num - 2 > deviceLength) {
     deviceLength = num - 2
+    // 桌面通知
     notifier.notify({
       title: '有人连进来了',
       message: '低调点!低调点!低调点!',
@@ -81,6 +88,3 @@ setInterval(async () => {
   }
   await printData()
 }, 5000)
-
-
-
