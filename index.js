@@ -11,7 +11,8 @@ let num = 0 // 当前联入设备总数
 let allDown = '' // 总下载
 let allUp = '' // 总上传
 let downSpeed = [] // 下载速度数组
-let deviceLength = 0 // 除去自己的设备数
+let deviceList = [] // 除去自己的设备
+
 
 function getData() {
   // 请求设备网络使用数据
@@ -21,7 +22,11 @@ function getData() {
       my = result.localhost
       downSpeed = []
       upSpeed = []
+      deviceList = []
       result.qosList.map(v => {
+        if (v.qosListHostname !== 'DESKTOP-QKBMCV7' && v.qosListHostname !== 'Unknown') {
+          deviceList.push(v.qosListHostname)
+        }
         // 将数据遍历到数组中, 图表需要的数据格式 {value: 你的数据, label: 数据的标题, color: 数据的颜色} 后两项不是必须的
         downSpeed.push({
           value: v.qosListDownSpeed,
@@ -71,11 +76,12 @@ const printData = () => {
 };
 
 // 定时刷新
+let otherDeviceLength = 0 // 设备计数
 setInterval(async () => {
   await getData()
   // 判断是否有新设备加入
-  if (num - 2 > deviceLength) {
-    deviceLength = num - 2
+  if (deviceList.length > otherDeviceLength) {
+    otherDeviceLength = deviceList.length
     // 桌面通知
     notifier.notify({
       title: '有人连进来了',
@@ -85,6 +91,8 @@ setInterval(async () => {
       function (error, response) {
         console.log(response)
       });
+  } else {
+    otherDeviceLength = deviceList.length
   }
   await printData()
 }, 5000)
